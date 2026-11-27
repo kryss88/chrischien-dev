@@ -1,6 +1,6 @@
 ---
 name: verify-site
-description: Launch and drive this Next.js personal homepage (pages /, /works, /works/*, /posts, /wallpapers, 404) in real system Chrome to prove a UI change works, the way a visitor would. Use after any change to pages/, components/ or lib/, or when asked to verify, screenshot or check the site.
+description: Launch and drive this Next.js personal homepage (pages /, /works, /works/*, /posts, 404) in real system Chrome to prove a UI change works, the way a visitor would. Use after any change to pages/, components/ or lib/, or when asked to verify, screenshot or check the site.
 ---
 
 # Verify the homepage
@@ -40,13 +40,15 @@ Read-only. Prints JSON and exits 0 only when `healthy: true`: the recorded PID i
 
 Seeded journeys (one per feature file in [features/](features/README.md)):
 
-| Journey            | Proves                                                          |
-| ------------------ | --------------------------------------------------------------- |
-| `home`             | Home renders identity, sections, and the voxel-dog WebGL canvas |
-| `works-navigation` | Navbar → Works → Inkdrop detail → breadcrumb back               |
-| `theme-toggle`     | Toggle flips colour mode, writes the cookie, survives reload    |
-| `mobile-menu`      | Hamburger menu (390x844) navigates to Works and Posts           |
-| `not-found`        | Unknown route returns 404 page and "Return to home" works       |
+| Journey            | Proves                                                                  |
+| ------------------ | ----------------------------------------------------------------------- |
+| `home`             | Home renders identity, sections, and the voxel-dog WebGL canvas         |
+| `desktop-nav`      | Navbar is exactly Works, Posts, Source; Posts link works                |
+| `works-navigation` | Navbar → Works → Inkdrop detail → breadcrumb back                       |
+| `theme-toggle`     | Toggle flips colour mode, writes the cookie, survives reload            |
+| `mobile-menu`      | Hamburger menu (390x844) lists the right items, reaches Works and Posts |
+| `not-found`        | Unknown route returns 404 page and "Return to home" works               |
+| `removed-routes`   | Former `/wallpapers` routes return 404; no page loads Payhip            |
 
 To prove a new change, write a journey next to the others. A journey is `export default async function ({ page, base, step, shot, aria, assert, note })`, plus optional `export const options = { viewport, isMobile, colorScheme }`:
 
@@ -65,7 +67,7 @@ Proof standards:
 - Capture the action and the resulting state: a screenshot before and after, plus the observed value (URL, title, `data-theme`, cookie) in `summary.json`.
 - Check side effects, not just pixels: the theme choice is the `chakra-ui-color-mode` cookie, then a reload.
 - Read the `console` array. Baseline noise you can ignore: React DevTools info, `[HMR] connected`, the `fetchPriority` prop warning from `next/image`, and `THREE.WebGLRenderer ... outputEncoding` warnings. Anything else new is a finding.
-- External links (Wallpapers, Uses, Source, posts, social) leave the site. Assert their `href`; don't follow them.
+- External links (Source, posts, social) leave the site. Assert their `href`; don't follow them.
 
 ## Cleanup
 
@@ -75,7 +77,6 @@ Kills only the PID tree recorded in `state.json` (`taskkill /T /F` on Windows, p
 
 ## Gotchas
 
-- `vercel.json` redirects (`/wallpapers/machiya`, `/wallpapers/cherry-blossoms` → store.craftz.dog) apply only on Vercel. Locally those routes render the page. Don't treat either behaviour as a bug in local verification.
 - Colour mode follows the system scheme first (`useSystemColorMode: true`). The harness pins `prefers-color-scheme: dark`; set `options.colorScheme` to test light.
-- `/`, `/posts` and `/wallpapers/cherry-blossoms` store the colour mode in a cookie (SSR). Other pages use `localStorage`. Check the store that matches the page.
+- `/` and `/posts` store the colour mode in a cookie (SSR). Other pages use `localStorage`. Check the store that matches the page.
 - The project runs on Node 24 (`.nvmrc`, `engines` in `package.json`). Yarn v1 refuses to install on other major versions.

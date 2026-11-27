@@ -24,5 +24,5 @@ Preconditions:
 
 ## Gotchas
 
-- `/`, `/posts` and `/wallpapers/cherry-blossoms` persist the mode in the `chakra-ui-color-mode` cookie. Other pages use `localStorage` under the same key. Checking the wrong store reports a false failure.
+- `/` and `/posts` persist the mode in the `chakra-ui-color-mode` cookie. Other pages use `localStorage` under the same key. Checking the wrong store reports a false failure.
 - The class on `<html>` is not a reliable signal. Read `document.documentElement.dataset.theme`.
