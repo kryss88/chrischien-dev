@@ -18,7 +18,7 @@ Preconditions:
 
 - Doctor is healthy.
 
-- **Reach it.** `verify.mjs drive mobile-menu` reaches `/posts` through the mobile menu and saves `posts.png`. No desktop journey exists yet.
+- **Reach it.** `verify.mjs drive desktop-nav` reaches `/posts` through the desktop navbar and `verify.mjs drive mobile-menu` through the mobile menu. Both save `posts.png`.
 - **Cards.** Not scripted yet. To prove it, write `journeys/posts.mjs`. It should click the navbar `Posts` link. Then it should assert that `getByRole('link', { name: 'How to build a portfolio website' })` has `href` `https://www.youtube.com/watch?v=bSMZgXzC9AA` and `target` `_blank`.
 
 ## Gotchas
