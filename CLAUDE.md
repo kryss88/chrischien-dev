@@ -20,10 +20,10 @@ npx prettier --check .   # formatting
 ## Architecture
 
 - Next.js 13 Pages Router, plain JavaScript (no TypeScript). Each file in `pages/` is a route. Content is written directly in the page files; there is no CMS.
-- `pages/_app.js` wraps every page in Chakra (`components/chakra.js`), the site frame (`components/layouts/main.js`: navbar, 3D scene, footer, `<head>` tags) and framer-motion page transitions.
+- `pages/_app.js` wraps every page in Chakra (`components/chakra.js`), the site frame (`components/layouts/main.js`: navbar, mascot image, footer, `<head>` tags) and framer-motion page transitions.
 - Each page wraps its content in `components/layouts/article.js` (tab title and enter animation). Use `components/section.js` for staggered fade-in blocks.
 - Theme lives in `lib/theme.js`. Colour mode is stored in a cookie, which is why pages export `getServerSideProps` from `components/chakra.js`. Keep that export on new pages.
-- 3D scene: `components/voxel-dog.js` + `lib/model.js` (Three.js, loaded client-side only).
+- Mascot area: `components/mascot-hero.js` shows `public/images/construction-hero.png` above every page. The reusable 3D scene, `components/mascot-scene.js` + `lib/model.js` (Three.js, client-side only), is kept for a future original mascot but not mounted.
 
 ## Conventions
 
@@ -35,7 +35,7 @@ npx prettier --check .   # formatting
 ## Licence rules
 
 - Keep `LICENSE` (MIT, Takuya Matsuyama) and a visible credit link to https://www.craftz.dog/ on the site.
-- The voxel dog model (`public/dog.glb`, CC BY-NC-ND) must not ship on chrischien.dev. It must also not load from craftzdog's CDN. Replace it before going public.
+- The original voxel dog model (`dog.glb`, CC BY-NC-ND) has been removed. Never add it back or load it from craftzdog's CDN.
 - Photos, screenshots, posts and text from the original site are not covered by MIT. Replace them.
 
 ## Verification
