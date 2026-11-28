@@ -5,7 +5,7 @@ description: Launch and drive this Next.js personal homepage (pages /, /works, /
 
 # Verify the homepage
 
-The app is a Next.js 13 (pages router) site with Chakra UI, framer-motion and a Three.js voxel-dog canvas. The only user surface is the web UI. All harness commands go through one script, run from the repo root:
+The app is a Next.js 13 (pages router) site with Chakra UI and framer-motion. The mascot area above every page is a static image (`components/mascot-hero.js`); the Three.js scene (`components/mascot-scene.js`) is kept but not mounted. The only user surface is the web UI. All harness commands go through one script, run from the repo root:
 
 ```
 node .claude/skills/verify-site/scripts/verify.mjs <launch|doctor|list|drive <journey>|cleanup> [--headed]
@@ -40,22 +40,22 @@ Read-only. Prints JSON and exits 0 only when `healthy: true`: the recorded PID i
 
 Seeded journeys (one per feature file in [features/](features/README.md)):
 
-| Journey            | Proves                                                                  |
-| ------------------ | ----------------------------------------------------------------------- |
-| `home`             | Home renders identity, sections, and the voxel-dog WebGL canvas         |
-| `desktop-nav`      | Navbar is exactly Works, Posts, Source; Posts link works                |
-| `works-navigation` | Navbar → Works → Inkdrop detail → breadcrumb back                       |
-| `theme-toggle`     | Toggle flips colour mode, writes the cookie, survives reload            |
-| `mobile-menu`      | Hamburger menu (390x844) lists the right items, reaches Works and Posts |
-| `not-found`        | Unknown route returns 404 page and "Return to home" works               |
-| `removed-routes`   | Former `/wallpapers` routes return 404; no page loads Payhip            |
+| Journey            | Proves                                                                           |
+| ------------------ | -------------------------------------------------------------------------------- |
+| `home`             | Home renders identity, sections, and the mascot image at 3 sizes and both themes |
+| `desktop-nav`      | Navbar is exactly Works, Posts, Source; Posts link works                         |
+| `works-navigation` | Navbar → Works → Inkdrop detail → breadcrumb back                                |
+| `theme-toggle`     | Toggle flips colour mode, writes the cookie, survives reload                     |
+| `mobile-menu`      | Hamburger menu (390x844) lists the right items, reaches Works and Posts          |
+| `not-found`        | Unknown route returns 404 page and "Return to home" works                        |
+| `removed-routes`   | Former `/wallpapers` routes return 404; no page loads Payhip                     |
 
 To prove a new change, write a journey next to the others. A journey is `export default async function ({ page, base, step, shot, aria, assert, note })`, plus optional `export const options = { viewport, isMobile, colorScheme }`:
 
 - `step(label, fn)` wraps one user action and records URL and title after it.
 - `shot(label)` saves a screenshot; `aria(label, locator?)` saves an ARIA snapshot (YAML).
 - `note(key, value)` attaches an observed value to the current step; `assert(cond, msg)` fails the journey.
-- `page` is a Playwright page. Use stable handles: `getByRole('heading', { level: 2, name: 'Takuya Matsuyama' })`, `getByRole('button', { name: 'Toggle theme' })`, `getByRole('button', { name: 'Options' })` (mobile menu), `getByRole('navigation').getByRole('link', { name: 'Works', exact: true })`, `.voxel-dog canvas`. Wait on `document.title` (`<Title> - Takuya Matsuyama`) after client navigation; it updates after the URL does.
+- `page` is a Playwright page. Use stable handles: `getByRole('heading', { level: 2, name: 'Takuya Matsuyama' })`, `getByRole('button', { name: 'Toggle theme' })`, `getByRole('button', { name: 'Options' })` (mobile menu), `getByRole('navigation').getByRole('link', { name: 'Works', exact: true })`, `getByRole('img', { name: 'Construction builder mascot holding a laptop' })`. Wait on `document.title` (`<Title> - Takuya Matsuyama`) after client navigation; it updates after the URL does.
 
 ## Evidence
 
@@ -66,7 +66,7 @@ Proof standards:
 - Drive the real visitor path: click the navbar, menu and buttons; don't `goto` the destination you're trying to prove is reachable.
 - Capture the action and the resulting state: a screenshot before and after, plus the observed value (URL, title, `data-theme`, cookie) in `summary.json`.
 - Check side effects, not just pixels: the theme choice is the `chakra-ui-color-mode` cookie, then a reload.
-- Read the `console` array. Baseline noise you can ignore: React DevTools info, `[HMR] connected`, the `fetchPriority` prop warning from `next/image`, and `THREE.WebGLRenderer ... outputEncoding` warnings. Anything else new is a finding.
+- Read the `console` array. Baseline noise you can ignore: React DevTools info, `[HMR] connected`, the `fetchPriority` prop warning from `next/image`, and `[Vercel Web Analytics]` debug logs. Anything else new is a finding.
 - External links (Source, posts, social) leave the site. Assert their `href`; don't follow them.
 
 ## Cleanup

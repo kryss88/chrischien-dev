@@ -29,7 +29,7 @@ Each feature file starts with an H1 title and one paragraph describing the visit
 
 ## Features
 
-- [Home page](./home.md): identity, sections, voxel dog.
+- [Home page](./home.md): identity, sections, mascot image.
 - [Navigation and works](./navigation.md): desktop navbar, works grid, work detail, breadcrumb, mobile menu, removed Wallpaper routes and Payhip.
 - [Theme toggle](./theme-toggle.md): dark/light switch and persistence.
 - [Posts](./posts.md): post grid with external links.
